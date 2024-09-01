@@ -1,12 +1,11 @@
 package u3d
 
-
 type MeshProvider func() (*MeshDescriptor, error)
 
-//	A MeshProvider that creates MeshDescriptor for a cube with extents -1 .. 1.
-//	args is ignored and err is always nil.
-//	The returned MeshDescriptor contains 12 triangle faces with IDs "t0" through "t11".
-//	These faces are classified in 6 distinct tags: "front","back","top","bottom","right","left".
+// A MeshProvider that creates MeshDescriptor for a cube with extents -1 .. 1.
+// args is ignored and err is always nil.
+// The returned MeshDescriptor contains 12 triangle faces with IDs "t0" through "t11".
+// These faces are classified in 6 distinct tags: "front","back","top","bottom","right","left".
 func MeshDescriptorCube() (meshDescriptor *MeshDescriptor, err error) {
 	var md MeshDescriptor
 	var u, d, l, r, f, b float32
@@ -53,10 +52,10 @@ func MeshDescriptorCube() (meshDescriptor *MeshDescriptor, err error) {
 	return
 }
 
-//	A MeshProvider that creates MeshDescriptor for a flat ground plane with extents -1 .. 1.
-//	args is ignored and err is always nil.
-//	The returned MeshDescriptor contains 2 triangle faces with IDs "t0" through "t1".
-//	These faces are all classified with tag: "plane".
+// A MeshProvider that creates MeshDescriptor for a flat ground plane with extents -1 .. 1.
+// args is ignored and err is always nil.
+// The returned MeshDescriptor contains 2 triangle faces with IDs "t0" through "t1".
+// These faces are all classified with tag: "plane".
 func MeshDescriptorPlane() (meshDescriptor *MeshDescriptor, err error) {
 	var md MeshDescriptor
 	md.AddPositions(MeshDescVA3{-1, 0, 1}, MeshDescVA3{1, 0, 1}, MeshDescVA3{-1, 0, -1}, MeshDescVA3{1, 0, -1})
@@ -69,10 +68,10 @@ func MeshDescriptorPlane() (meshDescriptor *MeshDescriptor, err error) {
 	return
 }
 
-//	A MeshProvider that creates MeshDescriptor for a pyramid with extents -1 .. 1.
-//	args is ignored and err is always nil.
-//	The returned MeshDescriptor contains 4 triangle faces with IDs "t0" through "t3".
-//	These faces are all classified with tag: "pyr".
+// A MeshProvider that creates MeshDescriptor for a pyramid with extents -1 .. 1.
+// args is ignored and err is always nil.
+// The returned MeshDescriptor contains 4 triangle faces with IDs "t0" through "t3".
+// These faces are all classified with tag: "pyr".
 func MeshDescriptorPyramid() (meshDescriptor *MeshDescriptor, err error) {
 	var md MeshDescriptor
 	md.AddPositions(MeshDescVA3{0, 1, 0}, MeshDescVA3{-1, -1, 1}, MeshDescVA3{1, -1, 1}, MeshDescVA3{1, -1, -1}, MeshDescVA3{-1, -1, -1})
@@ -87,10 +86,10 @@ func MeshDescriptorPyramid() (meshDescriptor *MeshDescriptor, err error) {
 	return
 }
 
-//	A MeshProvider that creates MeshDescriptor for a quad with extents -1 .. 1.
-//	args is ignored and err is always nil.
-//	The returned MeshDescriptor contains 2 triangle faces with IDs "t0" through "t1".
-//	These faces are all classified with tag: "quad".
+// A MeshProvider that creates MeshDescriptor for a quad with extents -1 .. 1.
+// args is ignored and err is always nil.
+// The returned MeshDescriptor contains 2 triangle faces with IDs "t0" through "t1".
+// These faces are all classified with tag: "quad".
 func MeshDescriptorQuad() (meshDescriptor *MeshDescriptor, err error) {
 	var md MeshDescriptor
 	md.AddPositions(MeshDescVA3{-1, -1, 0}, MeshDescVA3{-1, 1, 0}, MeshDescVA3{1, -1, 0}, MeshDescVA3{1, 1, 0})
@@ -103,9 +102,9 @@ func MeshDescriptorQuad() (meshDescriptor *MeshDescriptor, err error) {
 	return
 }
 
-//	A MeshProvider that creates MeshDescriptor for a triangle with extents -1 .. 1.
-//	args is ignored and err is always nil.
-//	The returned MeshDescriptor contains 1 triangle face with ID "t0" and tag "tri".
+// A MeshProvider that creates MeshDescriptor for a triangle with extents -1 .. 1.
+// args is ignored and err is always nil.
+// The returned MeshDescriptor contains 1 triangle face with ID "t0" and tag "tri".
 func MeshDescriptorTri() (meshDescriptor *MeshDescriptor, err error) {
 	var md MeshDescriptor
 	md.AddPositions(MeshDescVA3{-1, -1, 0}, MeshDescVA3{0, 1, 0}, MeshDescVA3{1, -1, 0})

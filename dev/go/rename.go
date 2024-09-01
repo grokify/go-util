@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/metaleap/go-util"
-	"github.com/metaleap/go-util/dev"
-	"github.com/metaleap/go-util/fs"
-	"github.com/metaleap/go-util/run"
-	"github.com/metaleap/go-util/slice"
-	"github.com/metaleap/go-util/str"
+	umisc "github.com/grokify/go-util"
+	udev "github.com/grokify/go-util/dev"
+	ufs "github.com/grokify/go-util/fs"
+	urun "github.com/grokify/go-util/run"
+	uslice "github.com/grokify/go-util/slice"
+	ustr "github.com/grokify/go-util/str"
 )
 
 func Gorename(cmdname string, filepath string, offset int, newname string, eol string) (fileedits udev.SrcMsgs, err error) {

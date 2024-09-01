@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-//	Describes a literal color using four 32-bit floating-point numbers in RGBA order.
+// Describes a literal color using four 32-bit floating-point numbers in RGBA order.
 type Rgba32 struct {
 	//	Red component
 	R float32
@@ -19,10 +19,10 @@ type Rgba32 struct {
 	A float32
 }
 
-//	Converts the specified `vals` to a newly initialized `Rgba32` instance.
+// Converts the specified `vals` to a newly initialized `Rgba32` instance.
 //
-//	The first 4 `vals` are used for `R`, `G`, `B`, and `A` in that order, if present.
-//	`A` is set to 1 if `vals[3]` is not present.
+// The first 4 `vals` are used for `R`, `G`, `B`, and `A` in that order, if present.
+// `A` is set to 1 if `vals[3]` is not present.
 func NewRgba32(vals ...float64) (me *Rgba32) {
 	me = &Rgba32{}
 	if len(vals) > 0 {
@@ -39,7 +39,7 @@ func NewRgba32(vals ...float64) (me *Rgba32) {
 	return
 }
 
-//	Describes a literal color using four 64-bit floating-point numbers in RGBA order.
+// Describes a literal color using four 64-bit floating-point numbers in RGBA order.
 type Rgba64 struct {
 	//	Red component
 	R float64
@@ -51,10 +51,10 @@ type Rgba64 struct {
 	A float64
 }
 
-//	Converts the specified `vals` to a newly initialized `Rgba64` instance.
+// Converts the specified `vals` to a newly initialized `Rgba64` instance.
 //
-//	The first 4 `vals` are used for `R`, `G`, `B`, and `A` in that order, if present.
-//	`A` is set to 1 if `vals[3]` is not present.
+// The first 4 `vals` are used for `R`, `G`, `B`, and `A` in that order, if present.
+// `A` is set to 1 if `vals[3]` is not present.
 func NewRgba64(vals ...float64) (me *Rgba64) {
 	me = &Rgba64{}
 	if len(vals) > 0 {
@@ -71,7 +71,7 @@ func NewRgba64(vals ...float64) (me *Rgba64) {
 	return
 }
 
-//	Converts the given value from gamma to linear color space.
+// Converts the given value from gamma to linear color space.
 func GammaToLinearSpace(f float64) float64 {
 	if f > 0.0404482362771082 {
 		return math.Pow((f+0.055)/1.055, 2.4)
@@ -79,17 +79,17 @@ func GammaToLinearSpace(f float64) float64 {
 	return f / 12.92
 }
 
-//	If 2 dimensions are represented in a 1-dimensional linear array, this function provides a way to return a 1D index addressing the specified 2D coordinate.
+// If 2 dimensions are represented in a 1-dimensional linear array, this function provides a way to return a 1D index addressing the specified 2D coordinate.
 func Index2D(x, y, ysize int) int {
 	return (x * ysize) + y
 }
 
-//	If 3 dimensions are represented in a 1-dimensional linear array, this function provides a way to return a 1D index addressing the specified 3D coordinate.
+// If 3 dimensions are represented in a 1-dimensional linear array, this function provides a way to return a 1D index addressing the specified 3D coordinate.
 func Index3D(x, y, z, xsize, ysize int) int {
 	return (((z * xsize) + x) * ysize) + y
 }
 
-//	Converts the given value from linear to gamma color space.
+// Converts the given value from linear to gamma color space.
 func LinearToGammaSpace(f float64) float64 {
 	if f > 0.00313066844250063 {
 		return 1.055*math.Pow(f, 1/2.4) - 0.055
@@ -97,7 +97,7 @@ func LinearToGammaSpace(f float64) float64 {
 	return f * 12.92
 }
 
-//	Saves any given `Image` as a local PNG file.
+// Saves any given `Image` as a local PNG file.
 func SavePngImageFile(img image.Image, filePath string) error {
 	file, err := os.Create(filePath)
 	if err == nil {

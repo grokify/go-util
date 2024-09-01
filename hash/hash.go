@@ -4,7 +4,7 @@ import (
 	"hash"
 )
 
-//	Convenience short-hand for `h.Write(data)`, then `h.Sum(b)`.
+// Convenience short-hand for `h.Write(data)`, then `h.Sum(b)`.
 func WriteAndSum(h hash.Hash, data, b []byte) (sum []byte, err error) {
 	if _, err = h.Write(data); err == nil {
 		sum = h.Sum(b)
@@ -12,7 +12,7 @@ func WriteAndSum(h hash.Hash, data, b []byte) (sum []byte, err error) {
 	return
 }
 
-//	Fowler/Noll/Vo '1'
+// Fowler/Noll/Vo '1'
 func Fnv1(vals []int) (h int) {
 	var ui uint64 = 14695981039346656037
 	h = int(ui)
@@ -22,7 +22,7 @@ func Fnv1(vals []int) (h int) {
 	return
 }
 
-//	Fowler/Noll/Vo '1a'
+// Fowler/Noll/Vo '1a'
 func Fnv1a(vals []int) (h int) {
 	var ui uint64 = 14695981039346656037
 	h = int(ui)
@@ -32,7 +32,7 @@ func Fnv1a(vals []int) (h int) {
 	return
 }
 
-//	A minor update to Bernstein's hash replaces addition with XOR for the combining step.
+// A minor update to Bernstein's hash replaces addition with XOR for the combining step.
 func ModifiedBernstein(vals []int) (h int) {
 	h = 0
 	for i := 0; i < len(vals); i++ {
@@ -41,7 +41,7 @@ func ModifiedBernstein(vals []int) (h int) {
 	return
 }
 
-//	Bob Jenkins
+// Bob Jenkins
 func OneAtATime(vals []int) (h int) {
 	h = 0
 	for i := 0; i < len(vals); i++ {
@@ -55,7 +55,7 @@ func OneAtATime(vals []int) (h int) {
 	return
 }
 
-//	The rotating hash with XOR
+// The rotating hash with XOR
 func RotatingXor(vals []int) (h int) {
 	h = 0
 	for i := 0; i < len(vals); i++ {
@@ -64,7 +64,7 @@ func RotatingXor(vals []int) (h int) {
 	return
 }
 
-//	The rotating hash with SUM
+// The rotating hash with SUM
 func RotatingAdd(vals []int) (h int) {
 	h = 0
 	for i := 0; i < len(vals); i++ {

@@ -7,8 +7,8 @@ import (
 	"sync"
 )
 
-//	The "missing interface" from the `image` package:
-//	`Set(x, y, color)` is implemented by most (but not all) `image` types that also implement `Image`.
+// The "missing interface" from the `image` package:
+// `Set(x, y, color)` is implemented by most (but not all) `image` types that also implement `Image`.
 type Picture interface {
 	image.Image
 
@@ -16,12 +16,12 @@ type Picture interface {
 	Set(int, int, color.Color)
 }
 
-//	Creates and returns a `Picture` just like `src`:
+// Creates and returns a `Picture` just like `src`:
 //
-//	If `copyPixels` is `true`, pixels in `src` are copied to `dst`, otherwise `dst` will be an
-//	empty/black `Picture` of the exact same dimensions, color format, stride/offset/etc as `src`.
+// If `copyPixels` is `true`, pixels in `src` are copied to `dst`, otherwise `dst` will be an
+// empty/black `Picture` of the exact same dimensions, color format, stride/offset/etc as `src`.
 //
-//	The resulting `dst` will be of the same type as `src` if `src` is an `*image.Alpha`, `*image.Alpha16`, `*image.Gray`, `*image.Gray16`, `*image.NRGBA`, `*image.NRGBA16`, or `*image.RGBA64` --- otherwise, `dst` will be an `*image.RGBA`.
+// The resulting `dst` will be of the same type as `src` if `src` is an `*image.Alpha`, `*image.Alpha16`, `*image.Gray`, `*image.Gray16`, `*image.NRGBA`, `*image.NRGBA16`, or `*image.RGBA64` --- otherwise, `dst` will be an `*image.RGBA`.
 func CreateLike(src image.Image, copyPixels bool) (dst Picture, pix []byte) {
 	makePix := func(pix []byte) (cp []byte) {
 		if cp = make([]byte, len(pix)); copyPixels {
@@ -73,16 +73,16 @@ func CreateLike(src image.Image, copyPixels bool) (dst Picture, pix []byte) {
 	return
 }
 
-//	Processes the specified `Image` and writes the result to the specified `Picture`:
+// Processes the specified `Image` and writes the result to the specified `Picture`:
 //
-//	If `flipY` is `true`, all pixel rows are inverted (`dst` becomes `src` vertically mirrored).
+// If `flipY` is `true`, all pixel rows are inverted (`dst` becomes `src` vertically mirrored).
 //
-//	If `toBgra` is `true`, all pixels' red and blue components are swapped.
+// If `toBgra` is `true`, all pixels' red and blue components are swapped.
 //
-//	If `toLinear` is `true`, all pixels are converted from gamma/sRGB to linear space --
-//	only use this if you're certain that `src` is not already in linear space.
+// If `toLinear` is `true`, all pixels are converted from gamma/sRGB to linear space --
+// only use this if you're certain that `src` is not already in linear space.
 //
-//	`dst` and `src` may point to the same `Image` object ONLY if `flipY` is `false`.
+// `dst` and `src` may point to the same `Image` object ONLY if `flipY` is `false`.
 func PreprocessImage(src image.Image, dst Picture, flipY, toBgra, toLinear bool) {
 	const preprocessParallel = true
 	var wg sync.WaitGroup

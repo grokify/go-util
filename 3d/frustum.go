@@ -3,7 +3,7 @@ package u3d
 import (
 	"math"
 
-	"github.com/metaleap/go-util/num"
+	unum "github.com/grokify/go-util/num"
 )
 
 type FrustumCoords struct {
@@ -135,7 +135,7 @@ func (me *Frustum) UpdatePlanes() {
 	me.Planes[5].setFrom(&me.Far.TR, &me.Far.TL, &me.Far.BL)
 }
 
-//	Gribb/Hartmann: "Fast Extraction of Viewing Frustum Planes from the WorldView-Projection Matrix"
+// Gribb/Hartmann: "Fast Extraction of Viewing Frustum Planes from the WorldView-Projection Matrix"
 func (me *Frustum) UpdatePlanesGH(mat *unum.Mat4, normalize bool) {
 	// Left clipping plane
 	me.Planes[0].X = mat[12] + mat[0]

@@ -3,12 +3,12 @@ package umgo
 import (
 	"fmt"
 
-	"github.com/metaleap/go-util"
+	ugo "github.com/grokify/go-util"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 )
 
-//	Short-hand for `mgo.Dial` then `Session.SetSafe`.
+// Short-hand for `mgo.Dial` then `Session.SetSafe`.
 func ConnectTo(url string, safe bool) (conn *mgo.Session, err error) {
 	if conn, err = mgo.Dial(url); conn != nil {
 		if err != nil {
@@ -21,12 +21,12 @@ func ConnectTo(url string, safe bool) (conn *mgo.Session, err error) {
 	return conn, err
 }
 
-//	Returns a connection URL for `ConnectTo`.
+// Returns a connection URL for `ConnectTo`.
 func ConnectUrl(host string, port int, direct bool) (url string) {
-	return fmt.Sprintf("%s:%d%s", host, port, ugo.Ifs(direct, "?connect=direct", ""))
+	return fmt.Sprintf("%s:%d%s", host, port, ugo.IfS(direct, "?connect=direct", ""))
 }
 
-//	Deletes all zero-value and empty-key entries from `m`, then returns `m`.
+// Deletes all zero-value and empty-key entries from `m`, then returns `m`.
 func Sparse(m bson.M) bson.M {
 	for key, val := range m {
 		if len(key) == 0 {

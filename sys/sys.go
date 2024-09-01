@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/metaleap/go-util/fs"
+	ufs "github.com/grokify/go-util/fs"
 )
 
 var (
@@ -24,13 +24,13 @@ var (
 	}
 )
 
-//	Short-hand for: `runtime.GOMAXPROCS(2 * runtime.NumCPU())`.
+// Short-hand for: `runtime.GOMAXPROCS(2 * runtime.NumCPU())`.
 func MaxProcs() {
 	runtime.GOMAXPROCS(2 * runtime.NumCPU())
 }
 
-//	Returns the human-readable operating system name represented by the specified
-//	`goOS` name, by looking up the corresponding entry in `OSNames`.
+// Returns the human-readable operating system name represented by the specified
+// `goOS` name, by looking up the corresponding entry in `OSNames`.
 func OSName(goOS string) (name string) {
 	if name = OSNames[goOS]; len(name) == 0 {
 		name = strings.ToTitle(goOS)
@@ -71,7 +71,7 @@ func UserDataDirPath(preferCacheOverConfig bool) string {
 	return dirpath
 }
 
-//	Returns the path to the current user's home directory.
+// Returns the path to the current user's home directory.
 func UserHomeDirPath() string {
 	dirpath := _userHomeDirPath
 	if len(dirpath) == 0 {

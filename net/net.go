@@ -8,10 +8,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/metaleap/go-util/fs"
+	ufs "github.com/grokify/go-util/fs"
 )
 
-//	Returns the result of `os.Hostname` if any, else `localhost`.
+// Returns the result of `os.Hostname` if any, else `localhost`.
 func HostName() (hostName string) {
 	if hostName, _ = os.Hostname(); len(hostName) == 0 {
 		hostName = "localhost"
@@ -19,17 +19,17 @@ func HostName() (hostName string) {
 	return
 }
 
-//	Returns a human-readable URL representation of the specified TCP address.
+// Returns a human-readable URL representation of the specified TCP address.
 //
-//	Examples:
+// Examples:
 //
-//	`unet.Addr("http", ":8080")` = `http://localhost:8080`
+// `unet.Addr("http", ":8080")` = `http://localhost:8080`
 //
-//	`unet.Addr("https", "testserver:9090")` = `https://testserver:9090`
+// `unet.Addr("https", "testserver:9090")` = `https://testserver:9090`
 //
-//	`unet.Addr("http", ":http")` = `http://localhost`
+// `unet.Addr("http", ":http")` = `http://localhost`
 //
-//	`unet.Addr("https", "demomachine:https")` = `https://demomachine`
+// `unet.Addr("https", "demomachine:https")` = `https://demomachine`
 func Addr(protocol, tcpAddr string) (fullAddr string) {
 	localhost := HostName()
 	both := strings.Split(tcpAddr, ":")
@@ -52,7 +52,7 @@ func Addr(protocol, tcpAddr string) (fullAddr string) {
 	return
 }
 
-//	Downloads a remote file at the specified (`net/http`-compatible) `srcFileUrl` to the specified `dstFilePath`.
+// Downloads a remote file at the specified (`net/http`-compatible) `srcFileUrl` to the specified `dstFilePath`.
 func DownloadFile(srcFileUrl, dstFilePath string) (err error) {
 	var rc io.ReadCloser
 	if rc, err = OpenRemoteFile(srcFileUrl); err == nil {
@@ -62,7 +62,7 @@ func DownloadFile(srcFileUrl, dstFilePath string) (err error) {
 	return
 }
 
-//	Opens a remote file at the specified (`net/http`-compatible) `srcFileUrl` and returns its `io.ReadCloser`.
+// Opens a remote file at the specified (`net/http`-compatible) `srcFileUrl` and returns its `io.ReadCloser`.
 func OpenRemoteFile(srcFileUrl string) (src io.ReadCloser, err error) {
 	var resp *http.Response
 	if resp, err = new(http.Client).Get(srcFileUrl); (err == nil) && (resp != nil) {
@@ -71,7 +71,7 @@ func OpenRemoteFile(srcFileUrl string) (src io.ReadCloser, err error) {
 	return
 }
 
-//	Implements `http.ResponseWriter` with a `bytes.Buffer`.
+// Implements `http.ResponseWriter` with a `bytes.Buffer`.
 type ResponseBuffer struct {
 	//	Used to implement the `http.ResponseWriter.Write` method.
 	bytes.Buffer
@@ -80,11 +80,11 @@ type ResponseBuffer struct {
 	Resp http.Response
 }
 
-//	Returns `me.Resp.Header`.
+// Returns `me.Resp.Header`.
 func (me *ResponseBuffer) Header() http.Header {
 	return me.Resp.Header
 }
 
-//	No-op -- currently, headers aren't written to the underlying `bytes.Buffer`.
+// No-op -- currently, headers aren't written to the underlying `bytes.Buffer`.
 func (_ *ResponseBuffer) WriteHeader(_ int) {
 }

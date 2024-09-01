@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/metaleap/go-util/fs"
-	"github.com/metaleap/go-util/run"
-	"github.com/metaleap/go-util/slice"
+	ufs "github.com/grokify/go-util/fs"
+	urun "github.com/grokify/go-util/run"
+	uslice "github.com/grokify/go-util/slice"
 )
 
 var (
@@ -131,7 +131,7 @@ func HasGoDevEnv() bool {
 	return true
 }
 
-//	Returns all paths listed in the `GOPATH` environment variable, for users who don't care about calling HasGoDevEnv.
+// Returns all paths listed in the `GOPATH` environment variable, for users who don't care about calling HasGoDevEnv.
 func AllGoPaths() []string {
 	if len(GoPaths) == 0 {
 		GoPaths = filepath.SplitList(os.Getenv("GOPATH"))
@@ -148,8 +148,8 @@ func DirPathToImportPath(dirpath string) string {
 	return ""
 }
 
-//	Returns the `path/filepath.Join`-ed full directory path for a specified `$GOPATH/src` sub-directory.
-//	Example: `util.GopathSrc("tools", "importers", "sql")` yields `c:\gd\src\tools\importers\sql` if `$GOPATH` is `c:\gd`.
+// Returns the `path/filepath.Join`-ed full directory path for a specified `$GOPATH/src` sub-directory.
+// Example: `util.GopathSrc("tools", "importers", "sql")` yields `c:\gd\src\tools\importers\sql` if `$GOPATH` is `c:\gd`.
 func GopathSrc(subDirNames ...string) (gps string) {
 	gp := []string{"", "src"}
 	for _, goPath := range AllGoPaths() { // in 99% of setups there's only 1 GOPATH, but hey..
@@ -161,8 +161,8 @@ func GopathSrc(subDirNames ...string) (gps string) {
 	return
 }
 
-//	Returns the `path/filepath.Join`-ed full directory path for a specified `$GOPATH/src/github.com` sub-directory.
-//	Example: `util.GopathSrcGithub("go-util", "num")` yields `c:\gd\src\github.com\go-util\num` if `$GOPATH` is `c:\gd`.
+// Returns the `path/filepath.Join`-ed full directory path for a specified `$GOPATH/src/github.com` sub-directory.
+// Example: `util.GopathSrcGithub("go-util", "num")` yields `c:\gd\src\github.com\go-util\num` if `$GOPATH` is `c:\gd`.
 func GopathSrcGithub(gitHubName string, subDirNames ...string) string {
 	return GopathSrc(append([]string{"github.com", gitHubName}, subDirNames...)...)
 }

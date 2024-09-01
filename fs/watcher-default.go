@@ -1,3 +1,4 @@
+//go:build !appengine
 // +build !appengine
 
 package ufs
@@ -8,19 +9,20 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/go-forks/fsnotify"
+	"github.com/fsnotify/fsnotify"
 
-	"github.com/metaleap/go-util/str"
+	ustr "github.com/grokify/go-util/str"
 )
 
-//	A convenient wrapper around `go-forks/fsnotify.Watcher`.
+// A convenient wrapper around `go-forks/fsnotify.Watcher`.
 //
-//	Usage:
-//		var w ufs.Watcher
-//		w.WatchIn(dir, pattern, runNow, handler)
-//		go w.Go()
-//		otherCode(laterOn...)
-//		w.WatchIn(anotherDir...)
+// Usage:
+//
+//	var w ufs.Watcher
+//	w.WatchIn(dir, pattern, runNow, handler)
+//	go w.Go()
+//	otherCode(laterOn...)
+//	w.WatchIn(anotherDir...)
 type Watcher struct {
 	*fsnotify.Watcher
 
@@ -29,7 +31,7 @@ type Watcher struct {
 
 	//	A collection of custom `fsnotify.FileEvent` handlers.
 	//	Not related to the handlers specified in your `Watcher.WatchIn` calls.
-	OnEvent []func(evt *fsnotify.FileEvent)
+	OnEvent []func(evt *fsnotify.Event)
 
 	//	A collection of custom `error` handlers.
 	OnError []func(err error)
@@ -39,7 +41,7 @@ type Watcher struct {
 	allHandlers  map[string][]WatcherHandler
 }
 
-//	Always returns a new `Watcher`, even if `err` is not `nil` (in which case, however, `me.Watcher` might be `nil`).
+// Always returns a new `Watcher`, even if `err` is not `nil` (in which case, however, `me.Watcher` might be `nil`).
 func NewWatcher() (me *Watcher, err error) {
 	me = &Watcher{dirsWatching: map[string]bool{}, allHandlers: map[string][]WatcherHandler{}, closed: make(chan bool)}
 	me.DebounceNano = (250 * time.Millisecond).Nanoseconds()
@@ -47,7 +49,7 @@ func NewWatcher() (me *Watcher, err error) {
 	return
 }
 
-//	Closes the underlying `me.Watcher`.
+// Closes the underlying `me.Watcher`.
 func (me *Watcher) Close() (err error) {
 	me.closed <- true
 	if me.Watcher != nil {
@@ -56,12 +58,12 @@ func (me *Watcher) Close() (err error) {
 	return
 }
 
-//	Starts watching. A loop designed to be called in a new go-routine, as in `go myWatcher.Go`.
-//	This function returns when `me.Close()` is called.
+// Starts watching. A loop designed to be called in a new go-routine, as in `go myWatcher.Go`.
+// This function returns when `me.Close()` is called.
 func (me *Watcher) Go() {
 	defer log.Println("BYEBYE!!")
 	var (
-		evt                            *fsnotify.FileEvent
+		evt                            fsnotify.Event
 		err                            error
 		hasLast                        bool
 		dif                            int64
@@ -69,32 +71,30 @@ func (me *Watcher) Go() {
 		on                             WatcherHandler
 		ons                            []WatcherHandler
 		onErr                          func(err error)
-		onEvt                          func(evt *fsnotify.FileEvent)
+		onEvt                          func(evt *fsnotify.Event)
 	)
 	lastEvt := map[string]int64{}
 	for {
 		select {
 		case <-me.closed:
 			return
-		case evt = <-me.Event:
-			if evt != nil {
-				_, hasLast = lastEvt[evt.Name]
-				if dif = time.Now().UnixNano() - lastEvt[evt.Name]; dif > me.DebounceNano || !hasLast {
-					for _, onEvt = range me.OnEvent {
-						onEvt(evt)
-					}
-					dirPath = filepath.Dir(evt.Name)
-					for dirPathAndNamePattern, ons = range me.allHandlers {
-						if filepath.Dir(dirPathAndNamePattern) == dirPath && ustr.MatchesAny(filepath.Base(evt.Name), filepath.Base(dirPathAndNamePattern)) {
-							for _, on = range ons {
-								on(evt.Name)
-							}
+		case evt = <-me.Events:
+			_, hasLast = lastEvt[evt.Name]
+			if dif = time.Now().UnixNano() - lastEvt[evt.Name]; dif > me.DebounceNano || !hasLast {
+				for _, onEvt = range me.OnEvent {
+					onEvt(&evt)
+				}
+				dirPath = filepath.Dir(evt.Name)
+				for dirPathAndNamePattern, ons = range me.allHandlers {
+					if filepath.Dir(dirPathAndNamePattern) == dirPath && ustr.MatchesAny(filepath.Base(evt.Name), filepath.Base(dirPathAndNamePattern)) {
+						for _, on = range ons {
+							on(evt.Name)
 						}
 					}
-					lastEvt[evt.Name] = time.Now().UnixNano()
 				}
+				lastEvt[evt.Name] = time.Now().UnixNano()
 			}
-		case err = <-me.Error:
+		case err = <-me.Errors:
 			if err != nil {
 				for _, onErr = range me.OnError {
 					onErr(err)
@@ -106,17 +106,17 @@ func (me *Watcher) Go() {
 	}
 }
 
-//	Watches dirs/files (whose `filepath.Base` names match the specified `namePattern`) inside the specified `dirPath` for change event notifications.
+// Watches dirs/files (whose `filepath.Base` names match the specified `namePattern`) inside the specified `dirPath` for change event notifications.
 //
-//	`handler` is invoked whenever a change event is observed, providing the full path.
+// `handler` is invoked whenever a change event is observed, providing the full path.
 //
-//	`runHandlerNow` allows immediate one-off invokation of `handler`. This will `DirWalker.Walk` the `dirPath`.
+// `runHandlerNow` allows immediate one-off invokation of `handler`. This will `DirWalker.Walk` the `dirPath`.
 //
-//	An empty `namePattern` is equivalent to `*`.
+// An empty `namePattern` is equivalent to `*`.
 func (me *Watcher) WatchIn(dirPath string, namePattern ustr.Pattern, runHandlerNow bool, handler WatcherHandler) (errs []error) {
 	dirPath = filepath.Clean(dirPath)
 	if _, ok := me.dirsWatching[dirPath]; !ok {
-		if err := me.Watch(dirPath); err != nil {
+		if err := me.Add(dirPath); err != nil {
 			errs = append(errs, err)
 		} else {
 			me.dirsWatching[dirPath] = true

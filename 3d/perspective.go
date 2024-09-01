@@ -1,6 +1,5 @@
 package u3d
 
-
 type Perspective struct {
 	//	Whether this is a perspective-projection camera. Defaults to true.
 	//	If false, no projection transformation is applied.

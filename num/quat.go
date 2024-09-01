@@ -15,7 +15,7 @@ func Quat_Identity() (q Quat) {
 	return
 }
 
-//	Quaternion
+// Quaternion
 type Quat struct {
 	//	X, Y, Z, W
 	Vec4

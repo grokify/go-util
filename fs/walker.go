@@ -6,16 +6,16 @@ import (
 	"path/filepath"
 )
 
-//	Used for `DirWalker.DirVisitor` and `DirWalker.FileVisitor`.
-//	Always return `keepWalking` as true unless you want to immediately terminate a `Walk` early.
+// Used for `DirWalker.DirVisitor` and `DirWalker.FileVisitor`.
+// Always return `keepWalking` as true unless you want to immediately terminate a `Walk` early.
 type WalkerVisitor func(fullPath string) (keepWalking bool)
 
-//	An empty `WalkerVisitor` used in place of a `nil` directory or file visitor during a `DirWalker.Walk`. Always returns `true`.
+// An empty `WalkerVisitor` used in place of a `nil` directory or file visitor during a `DirWalker.Walk`. Always returns `true`.
 func walkerVisitorNoop(_ string) bool {
 	return true
 }
 
-//	Provides recursive directory walking with a variety of options.
+// Provides recursive directory walking with a variety of options.
 type DirWalker struct {
 	//	`Walk` returns a slice of all `error`s encountered but keeps walking as indicated by
 	//	`DirVisitor` and/or `FileVisitor` --- to abort walking upon the first `error`, set this to `true`.
@@ -41,14 +41,14 @@ type DirWalker struct {
 	FileVisitor WalkerVisitor
 }
 
-//	Initializes and returns a new `DirWalker` with the specified (optional) `WalkerVisitor`s.
-//	`deep` sets `VisitSubDirs`.
+// Initializes and returns a new `DirWalker` with the specified (optional) `WalkerVisitor`s.
+// `deep` sets `VisitSubDirs`.
 func NewDirWalker(deep bool, dirVisitor, fileVisitor WalkerVisitor) (me *DirWalker) {
 	me = &DirWalker{DirVisitor: dirVisitor, FileVisitor: fileVisitor, VisitSubDirs: deep, VisitSelf: true}
 	return
 }
 
-//	Initiates a walk starting at the specified `dirPath`.
+// Initiates a walk starting at the specified `dirPath`.
 func (me *DirWalker) Walk(dirPath string) (errs []error) {
 	me.walk(me.VisitSelf, dirPath, &errs)
 	return

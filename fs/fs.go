@@ -9,11 +9,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/metaleap/go-util/slice"
-	"github.com/metaleap/go-util/str"
+	uslice "github.com/grokify/go-util/slice"
+	ustr "github.com/grokify/go-util/str"
 )
 
-//	Handles a file-system notification originating in a `Watcher`.
+// Handles a file-system notification originating in a `Watcher`.
 type WatcherHandler func(path string)
 
 var (
@@ -36,7 +36,7 @@ func PathPrefix(val string, pathprefix string) bool {
 	return strings.HasPrefix(val, pathprefix)
 }
 
-//	Removes anything in `dirPath` (but not `dirPath` itself), except items whose `os.FileInfo.Name` matches any of the specified `keepNamePatterns`.
+// Removes anything in `dirPath` (but not `dirPath` itself), except items whose `os.FileInfo.Name` matches any of the specified `keepNamePatterns`.
 func ClearDirectory(dirPath string, keepNamePatterns ...string) (err error) {
 	var fileInfos []os.FileInfo
 	var matcher ustr.Matcher
@@ -53,8 +53,8 @@ func ClearDirectory(dirPath string, keepNamePatterns ...string) (err error) {
 	return
 }
 
-//	Removes all directories inside `dirPath`, except those that
-//	contain files or descendent directories that contain files.
+// Removes all directories inside `dirPath`, except those that
+// contain files or descendent directories that contain files.
 func ClearEmptyDirectories(dirPath string) (canDelete bool, err error) {
 	var (
 		fi     os.FileInfo
@@ -85,8 +85,8 @@ func ClearEmptyDirectories(dirPath string) (canDelete bool, err error) {
 	return
 }
 
-//	Copies all files and directories inside `srcDirPath` to `dstDirPath`.
-//	All sub-directories whose `os.FileInfo.Name` is matched by `skipDirs` (optional) are skipped.
+// Copies all files and directories inside `srcDirPath` to `dstDirPath`.
+// All sub-directories whose `os.FileInfo.Name` is matched by `skipDirs` (optional) are skipped.
 func CopyAll(srcDirPath, dstDirPath string, skipDirs *ustr.Matcher, skipFileSuffix string) (err error) {
 	var (
 		srcPath, destPath string
@@ -109,7 +109,7 @@ func CopyAll(srcDirPath, dstDirPath string, skipDirs *ustr.Matcher, skipFileSuff
 	return
 }
 
-//	Performs an `io.Copy` from the specified source file to the specified destination file.
+// Performs an `io.Copy` from the specified source file to the specified destination file.
 func CopyFile(srcFilePath, dstFilePath string) (err error) {
 	var src *os.File
 	if src, err = os.Open(srcFilePath); err != nil {
@@ -120,7 +120,7 @@ func CopyFile(srcFilePath, dstFilePath string) (err error) {
 	return
 }
 
-//	Returns whether a directory (not a file) exists at the specified `dirpath`.
+// Returns whether a directory (not a file) exists at the specified `dirpath`.
 func DirExists(dirpath string) bool {
 	if len(dirpath) == 0 {
 		return false
@@ -129,7 +129,7 @@ func DirExists(dirpath string) bool {
 	return err == nil && stat.IsDir()
 }
 
-//	Returns whether all of the specified `dirOrFileNames` exist in `dirPath`.
+// Returns whether all of the specified `dirOrFileNames` exist in `dirPath`.
 func DirsOrFilesExistIn(dirPath string, dirOrFileNames ...string) bool {
 	var (
 		err  error
@@ -144,7 +144,7 @@ func DirsOrFilesExistIn(dirPath string, dirOrFileNames ...string) bool {
 	return true
 }
 
-//	If a directory does not exist at the specified `dirPath`, attempts to create it.
+// If a directory does not exist at the specified `dirPath`, attempts to create it.
 func EnsureDirExists(dirPath string) (err error) {
 	if !DirExists(dirPath) {
 		if err = EnsureDirExists(filepath.Dir(dirPath)); err == nil {
@@ -154,10 +154,10 @@ func EnsureDirExists(dirPath string) (err error) {
 	return
 }
 
-//	Extracts a ZIP archive to the local file system.
-//	zipFilePath: full file path to the ZIP archive file.
-//	targetDirPath: directory path where un-zipped archive contents are extracted to.
-//	deleteZipFile: deletes the ZIP archive file upon successful extraction.
+// Extracts a ZIP archive to the local file system.
+// zipFilePath: full file path to the ZIP archive file.
+// targetDirPath: directory path where un-zipped archive contents are extracted to.
+// deleteZipFile: deletes the ZIP archive file upon successful extraction.
 func ExtractZipFile(zipFilePath, targetDirPath string, deleteZipFile bool, fileNamesPrefix string, fileNamesToExtract ...string) error {
 	var (
 		fnames      []string
@@ -204,7 +204,7 @@ func ExtractZipFile(zipFilePath, targetDirPath string, deleteZipFile bool, fileN
 	return err
 }
 
-//	Returns whether a file (not a directory) exists at the specified `filePath`.
+// Returns whether a file (not a directory) exists at the specified `filePath`.
 func FileExists(filePath string) bool {
 	stat, err := os.Stat(filePath)
 	return err == nil && stat.Mode().IsRegular()
@@ -239,10 +239,10 @@ func FindFileInfo(dirPath string, fileBaseName string, fileExts []string, tryLow
 }
 */
 
-//	Returns whether `srcFilePath` has been modified later than `dstFilePath`.
+// Returns whether `srcFilePath` has been modified later than `dstFilePath`.
 //
-//	NOTE: be aware that `newer` will be returned as `true` if `err` is returned as *not* `nil`,
-//	since that is often more convenient for many use-cases.
+// NOTE: be aware that `newer` will be returned as `true` if `err` is returned as *not* `nil`,
+// since that is often more convenient for many use-cases.
 func IsNewerThan(srcFilePath, dstFilePath string) (newer bool, err error) {
 	var out, src os.FileInfo
 	newer = true
@@ -304,8 +304,8 @@ func IsAnyInNewerThanAnyOf(dirpath string, filepaths ...string) (isAnyNewer bool
 	return
 }
 
-//	Applies all specified `patterns` to `filepath.Match` and returns the first
-//	successfully matching such pattern.
+// Applies all specified `patterns` to `filepath.Match` and returns the first
+// successfully matching such pattern.
 func MatchesAny(name string, patterns ...string) (matchingPattern string, err error) {
 	var (
 		b bool
@@ -322,7 +322,7 @@ func MatchesAny(name string, patterns ...string) (matchingPattern string, err er
 	return
 }
 
-//	Reads and returns the binary contents of a file with non-idiomatic error handling, mostly for one-off `package main`s.
+// Reads and returns the binary contents of a file with non-idiomatic error handling, mostly for one-off `package main`s.
 func ReadBinaryFile(filePath string, panicOnError bool) []byte {
 	bytes, err := ioutil.ReadFile(filePath)
 	if panicOnError && (err != nil) {
@@ -346,7 +346,7 @@ func ReadFromBinary(readSeeker io.ReadSeeker, offset int64, byteOrder binary.Byt
 }
 */
 
-//	Reads and returns the contents of a text file with non-idiomatic error handling, mostly for one-off `package main`s.
+// Reads and returns the contents of a text file with non-idiomatic error handling, mostly for one-off `package main`s.
 func ReadTextFile(filePath string, panicOnError bool, defaultValue string) string {
 	bytes, err := ioutil.ReadFile(filePath)
 	if err == nil {
@@ -380,7 +380,7 @@ func SanitizeFsName(name string) string {
 	})
 }
 
-//	Performs an `io.Copy` from the specified `io.Reader` to the specified local file.
+// Performs an `io.Copy` from the specified `io.Reader` to the specified local file.
 func SaveToFile(src io.Reader, dstFilePath string) (err error) {
 	var file *os.File
 	if file, err = os.Create(dstFilePath); file != nil {
@@ -392,39 +392,39 @@ func SaveToFile(src io.Reader, dstFilePath string) (err error) {
 	return
 }
 
-//	Calls `visitor` for `dirPath` and all descendent directories (but not files).
+// Calls `visitor` for `dirPath` and all descendent directories (but not files).
 func WalkAllDirs(dirPath string, visitor WalkerVisitor) []error {
 	return NewDirWalker(true, visitor, nil).Walk(dirPath)
 }
 
-//	Calls `visitor` for all files (but not directories) directly or indirectly descendent to `dirPath`.
+// Calls `visitor` for all files (but not directories) directly or indirectly descendent to `dirPath`.
 func WalkAllFiles(dirPath string, visitor WalkerVisitor) []error {
 	return NewDirWalker(true, nil, visitor).Walk(dirPath)
 }
 
-//	Calls `visitor` for all directories (but not files) in `dirPath`, but not their sub-directories and not `dirPath` itself.
+// Calls `visitor` for all directories (but not files) in `dirPath`, but not their sub-directories and not `dirPath` itself.
 func WalkDirsIn(dirPath string, visitor WalkerVisitor) []error {
 	w := NewDirWalker(false, visitor, nil)
 	w.VisitSelf = false
 	return w.Walk(dirPath)
 }
 
-//	Calls `visitor` for all files (but not directories) directly inside `dirPath`, but not for any inside sub-directories.
+// Calls `visitor` for all files (but not directories) directly inside `dirPath`, but not for any inside sub-directories.
 func WalkFilesIn(dirPath string, visitor WalkerVisitor) []error {
 	w := NewDirWalker(false, nil, visitor)
 	w.VisitSelf = false
 	return w.Walk(dirPath)
 }
 
-//	A short-hand for `ioutil.WriteFile` using `ModePerm`.
-//	Also ensures the target file's directory exists.
+// A short-hand for `ioutil.WriteFile` using `ModePerm`.
+// Also ensures the target file's directory exists.
 func WriteBinaryFile(filePath string, contents []byte) error {
 	EnsureDirExists(filepath.Dir(filePath))
 	return ioutil.WriteFile(filePath, contents, ModePerm)
 }
 
-//	A short-hand for `ioutil.WriteFile`, using `ModePerm`.
-//	Also ensures the target file's directory exists.
+// A short-hand for `ioutil.WriteFile`, using `ModePerm`.
+// Also ensures the target file's directory exists.
 func WriteTextFile(filePath, contents string) error {
 	return WriteBinaryFile(filePath, []byte(contents))
 }

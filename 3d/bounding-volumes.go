@@ -1,6 +1,5 @@
 package u3d
 
-
 type Bounds struct {
 	Sphere float64
 	AaBox  AaBb

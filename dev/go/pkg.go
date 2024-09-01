@@ -11,11 +11,11 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/metaleap/go-util/dev"
-	"github.com/metaleap/go-util/fs"
-	"github.com/metaleap/go-util/run"
-	"github.com/metaleap/go-util/slice"
-	"github.com/metaleap/go-util/str"
+	udev "github.com/grokify/go-util/dev"
+	ufs "github.com/grokify/go-util/fs"
+	urun "github.com/grokify/go-util/run"
+	uslice "github.com/grokify/go-util/slice"
+	ustr "github.com/grokify/go-util/str"
 )
 
 type Pkg struct {
@@ -47,7 +47,7 @@ func (me *Pkg) IsSortedPriorToByDeps(cmp *Pkg) bool {
 	return !uslice.StrHas(me.Deps, cmp.ImportPath)
 }
 
-//	copied over from `go list` src because that cmd outputs this stuff but one cannot import it from anywhere
+// copied over from `go list` src because that cmd outputs this stuff but one cannot import it from anywhere
 type PackageError struct {
 	ImportStack []string // shortest path from package named on command line to this one
 	Pos         string   // position of error (if present, file:line:col)

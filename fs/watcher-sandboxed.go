@@ -1,3 +1,4 @@
+//go:build appengine
 // +build appengine
 
 package ufs
@@ -5,23 +6,23 @@ package ufs
 import (
 	"path/filepath"
 
-	"github.com/metaleap/go-util/str"
+	ustr "github.com/grokify/go-util/str"
 )
 
-//	A convenient wrapper around `go-forks/fsnotify.Watcher`.
+// A convenient wrapper around `go-forks/fsnotify.Watcher`.
 //
-//	**NOTE**: `godocdown` picked `watcher-sandboxed.go` shim instead of `watcher-default.go`:
-//	Refer to http://godoc.org/github.com/metaleap/go-util/fs#Watcher for *actual* docs on `Watcher`.
+// **NOTE**: `godocdown` picked `watcher-sandboxed.go` shim instead of `watcher-default.go`:
+// Refer to http://godoc.org/github.com/grokify/go-util/fs#Watcher for *actual* docs on `Watcher`.
 type Watcher struct {
 }
 
-//	Returns a new `Watcher`, `err` is always nil.
+// Returns a new `Watcher`, `err` is always nil.
 func NewWatcher() (me *Watcher, err error) {
 	me = &Watcher{}
 	return
 }
 
-//	Closes the underlying `me.Watcher`.
+// Closes the underlying `me.Watcher`.
 func (me *Watcher) Close() (err error) {
 	return
 }
